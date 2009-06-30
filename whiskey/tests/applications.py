@@ -10,8 +10,28 @@ class TestRouting(WsgiTestCase):
         routes = (('/', 'slash'),)
         
         self.mock_token_request(routes=routes, path='/', views=locals())
-        
+        self.assertContentEquals("success")
+    
     def testBasicRoutingWithNamedArgs(self):
+        class stuff(BaseView):
+            
+            def GET(self, *args, **kwargs):
+                response = WSGIResponse()
+                response.content = str(kwargs)
+                return response
+        
+        routes = (
+            ('/(?P<stuff>[0-9A-Za-z]+)', 'stuff'),
+            ('/(?P<my>[0-9A-Za-z]+)/(?P<things>[0-9A-Za-z]+)', 'stuff')
+        )
+        
+        self.mock_request(routes=routes, path='/routingstuff', views=locals())
+        self.assertContentEquals("{'stuff': 'routingstuff'}")
+        
+        self.mock_request(routes=routes, path='/meine/Dingen', views=locals())
+        self.assertContentEquals("{'things': 'Dingen', 'my': 'meine'}")
+    
+    def testBasicTokenRoutingWithNamedArgs(self):
         class stuff(BaseView):
             
             def GET(self, *args, **kwargs):
@@ -32,6 +52,9 @@ class TestRouting(WsgiTestCase):
     
     def testRoutingFailure(self):
         routes    = ()
+        self.mock_request(routes=routes, path='/routingstuff')
+        self.assertStatusEquals('404 NOT FOUND')
+        
         self.mock_token_request(routes=routes, path='/routingstuff')
         self.assertStatusEquals('404 NOT FOUND')
     
@@ -54,6 +77,9 @@ class TestRouting(WsgiTestCase):
                 
         routes    = (('/', 'route'),)
         for method in ('POST', 'GET', 'DELETE', 'PUT', 'HEAD', 'OPTIONS', 'TRACE'):
+            self.mock_request(routes=routes, path='/', method=method, views=locals())
+            self.assertContentEquals('route.%s' % method)
+            
             self.mock_token_request(routes=routes, path='/', method=method, views=locals())
             self.assertContentEquals('route.%s' % method)
         
@@ -61,8 +87,11 @@ class TestRouting(WsgiTestCase):
         class route(BaseView):
             def GET(self):
                 return WSGIResponse('route.GET')
-
+                
         routes = (('/', 'route'),)
+        self.mock_request(routes=routes, path='/', method='POST', views=locals())
+        self.assertStatusEquals('405 METHOD NOT ALLOWED')
+        
         self.mock_token_request(routes=routes, path='/', method='POST', views=locals())
         self.assertStatusEquals('405 METHOD NOT ALLOWED')
         
@@ -73,10 +102,13 @@ class TestRouting(WsgiTestCase):
                 return WSGIResponse('route.GET')
                 
         routes    = (('/', 'route'),)
+        self.mock_request(routes=routes, path='/', method="HEAD", views=locals())
+        self.assertContentEquals('route.GET')
+        
         self.mock_token_request(routes=routes, path='/', method="HEAD", views=locals())
         self.assertContentEquals('route.GET')
-
-class TestRouteMaster(WsgiTestCase):
+        
+class TestTokenRouteMaster(WsgiTestCase):
     
     def setUp(self):
         routes = (('/', 'stubb'),)

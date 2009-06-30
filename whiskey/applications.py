@@ -29,8 +29,7 @@ class WebApp(WebAppInterface):
     """
     
     def __init__(self, routes, views):
-        self.routes = [(re.compile('^%s$' % routes[i]), routes[i + 1])
-                     for i in xrange(0, len(routes), 2)]
+        self.routes = [(re.compile('^%s$' % route[0]), route[1]) for route in routes]
         self.views = views
         
     def __call__(self, environ, start_response):
