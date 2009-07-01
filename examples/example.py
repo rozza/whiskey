@@ -1,9 +1,6 @@
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 from whiskey import *
-
-routes = (
-    ('/', 'index'),
-    ('/about', 'about'),
-)
 
 class BaseView(object):
     
@@ -14,10 +11,14 @@ class BaseView(object):
     def GET(self):
         raise WSGIError()
     POST = DELETE = PUT = GET
-
+    
     def HEAD(self):
         return self.GET()
 
+routes = (
+    ('/', 'index'),
+    ('/about', 'about'),
+)
 
 class index(BaseView):
     

@@ -99,4 +99,4 @@ class TokenBasedApp(WebApp):
             regex.append('')
         
         # stitch it back together as a path
-        return '^%s$' % '/'.join(regex)      
+        return '^%s$' % '/'.join(regex)     
