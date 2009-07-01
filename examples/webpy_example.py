@@ -2,6 +2,7 @@ import os, sys, re
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 from whiskey import *
 
+# Setup of core components
 class BaseView(object):
     
     def __init__(self, application, request):
@@ -14,6 +15,19 @@ class BaseView(object):
     
     def HEAD(self):
         return self.GET()
+
+class WebPyApp(WebApp):
+    """
+    An interface to a web.py like application.  It works like the web.run
+    function in web.py
+    """
+    
+    def __init__(self, routes, views):
+        self.routes = [(re.compile('^%s$' % routes[i]), routes[i + 1])
+                     for i in xrange(0, len(routes), 2)]
+        self.views = views
+
+# The controllers
 
 urls = (
     '/',        'index',
@@ -30,18 +44,6 @@ class about(BaseView):
     
     def GET(self):
         return WSGIResponse('This is the about page')
-
-
-class WebPyApp(WebApp):
-    """
-    An interface to a web.py like application.  It works like the web.run
-    function in web.py
-    """
-    
-    def __init__(self, routes, views):
-        self.routes = [(re.compile('^%s$' % routes[i]), routes[i + 1])
-                     for i in xrange(0, len(routes), 2)]
-        self.views = views
 
 
 application = WebPyApp(urls, globals())
