@@ -1,26 +1,18 @@
-Whiskey - An minimal Python WSGI web framework
-===============================================
+Whiskey - An [NIH][nih] minimal Python WSGI web framework
+====================================================
 
-After nosing round various micro and minimal frameworks, I thought I'd write my own for managing small / medium scale apps with varying roles, from services, to full sites, to google app engine sites.
-
-I've tried to combine elements (shamelessly copied some) from an number of small WSGI frameworks like: [Paste][paste], [Juno][juno], [Web.py][webpy], [Newf][newf], [Itty][itty] and [Werkzeug][werkzeug].
-
-Core Philosophy
+Just for Fun
 ---------------
 
-Whiskey's core philosophy is that its simple and components are switchable, I want a certain level of "plumbing" taken care of for me, but I also want to be able to define my own rules.  So with that in mind Whiskey, aims to provide examples of flexible application level routing, which are easy to use or even easier to define your own.
+This project / exercise was just for fun and isn't supported, so please use one of the supported / updated frameworks listed below:
 
-TODO
-----
+Who, what, where and why?
+-------------------------
 
-* Lots - test and refactor
-* More examples
-* Improved handling of WSGIErrors - it has a smell at the moment.
-* Decorator based routing - its simple!
-* Mixed routing, With class based handlers for routes and reversing of routes.
-* Support for middleware? Request and response
-* Production WSGI interface for Apache
+For no other reason than for fun and mild interest, I've created a minimal wsgi framework by combining elements (shamelessly copied some) from an number of small WSGI frameworks like: [Paste][paste], [Juno][juno], [Web.py][webpy], [Newf][newf], [Itty][itty] and [Werkzeug][werkzeug].
 
+
+[nih]: http://lucumr.pocoo.org/2009/7/30/nih-in-the-wsgi-world
 [itty]: http://github.com/toastdriven/itty/tree/master
 [juno]: http://github.com/breily/juno/tree
 [webpy]: http://webpy.org/
